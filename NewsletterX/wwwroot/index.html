@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<form>
+    <input id="email" type="text"/>
+    <button onclick="subscribe(email.value)">Trykk her for å melde deg på!</button>
+</form>
+<script>
+    async function subscribe(email) {
+        try {
+            let result = await axios.post('/api/subscribe?email=' + email);
+            console.log(result);
+        } catch (error) {
+            console.log(error.response.data);
+        }
+    }
+</script>
+</body>
+</html>
