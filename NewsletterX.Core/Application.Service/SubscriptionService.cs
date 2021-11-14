@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using NewsletterX.Core.Domain.Model;
 using NewsletterX.Core.Domain.Service;
@@ -34,7 +35,7 @@ namespace NewsletterX.Core.Application.Service
             var subscription = await _subscriptionRepository.ReadByEmail(verificationRequest.Email);
             if (subscription == null || verificationRequest.VerificationCode != subscription.VerificationCode)
             {
-                return false;
+                throw new ValidationException("Koden er feil, eller eposten er ikke registret i databasen");
             }
             subscription.IsVerified = true;
             var hasUpdated = await _subscriptionRepository.Update(subscription);
