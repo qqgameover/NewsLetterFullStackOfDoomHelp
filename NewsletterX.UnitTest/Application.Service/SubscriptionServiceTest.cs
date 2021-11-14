@@ -136,8 +136,6 @@ namespace NewsletterX.UnitTest
 
                 var service = new SubscriptionService(null, subscriptionRepoMock.Object);
                 var isGood = await service.Verify(verificationRequest);
-                subscriptionRepoMock.Verify(sr => sr.ReadByEmail(email));
-                subscriptionRepoMock.VerifyNoOtherCalls();
             }
             catch (Exception wantedException)
             {
