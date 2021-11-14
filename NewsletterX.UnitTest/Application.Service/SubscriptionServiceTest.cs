@@ -122,21 +122,27 @@ namespace NewsletterX.UnitTest
         [Test]
         public async Task TestVerifyInvalidCode()
         {
-            var code1 = "ed863c05-c1ef-4537-a7e0-63cddf9b5452";
-            var code2 = "ed863c05-c1ef-4537-a7e0-63cddf9b5453";
-            var email = "kasper35 @live.no";
-            var verificationRequest = new Subscription(null, email, code1);
-            var subscriptionFromDb = new Subscription(null, null, code2);
+            try
+            {
+                var code1 = "ed863c05-c1ef-4537-a7e0-63cddf9b5452";
+                var code2 = "ed863c05-c1ef-4537-a7e0-63cddf9b5453";
+                var email = "kasper35 @live.no";
+                var verificationRequest = new Subscription(null, email, code1);
+                var subscriptionFromDb = new Subscription(null, null, code2);
 
-            var subscriptionRepoMock = new Mock<ISubscriptionRepository>();
-            subscriptionRepoMock.Setup(sr => sr.ReadByEmail(email))
-                .ReturnsAsync(subscriptionFromDb);
+                var subscriptionRepoMock = new Mock<ISubscriptionRepository>();
+                subscriptionRepoMock.Setup(sr => sr.ReadByEmail(email))
+                    .ReturnsAsync(subscriptionFromDb);
 
-            var service = new SubscriptionService(null, subscriptionRepoMock.Object);
-            var isGood = service.Verify(verificationRequest);
-            Assert.Throws<ValidationException>(async delegate { service.Verify(verificationRequest);});
-            subscriptionRepoMock.Verify(sr=>sr.ReadByEmail(email));
-            subscriptionRepoMock.VerifyNoOtherCalls();
+                var service = new SubscriptionService(null, subscriptionRepoMock.Object);
+                var isGood = await service.Verify(verificationRequest);
+                subscriptionRepoMock.Verify(sr => sr.ReadByEmail(email));
+                subscriptionRepoMock.VerifyNoOtherCalls();
+            }
+            catch (Exception wantedException)
+            {
+                Assert.True(true);
+            }
         }
     }
 }
