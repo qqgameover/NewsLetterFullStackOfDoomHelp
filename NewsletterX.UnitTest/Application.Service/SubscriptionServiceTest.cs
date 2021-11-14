@@ -24,15 +24,15 @@ namespace NewsletterX.UnitTest
             var service = new SubscriptionService(emailServiceMock.Object, subscriptionRepoMock.Object);
 
             // act
-            var subscription = new Subscription("Terje", "terje@kolderup.net");
+            var subscription = new Subscription("Kasper", "kasper35@live.no");
             var subscribeIsSuccess = await service.Subscribe(subscription);
 
             // assert
             Assert.IsTrue(subscribeIsSuccess);
             emailServiceMock.Verify(
-                es=>es.Send(It.Is<Email>(e=>e.To=="terje@kolderup.net")));
+                es=>es.Send(It.Is<Email>(e=>e.To== "kasper35@live.no")));
             subscriptionRepoMock.Verify(
-                sr=>sr.Create(It.Is<Subscription>(s=>s.Email=="terje@kolderup.net")));
+                sr=>sr.Create(It.Is<Subscription>(s=>s.Email== "kasper35@live.no")));
             emailServiceMock.VerifyNoOtherCalls();
             subscriptionRepoMock.VerifyNoOtherCalls();
         }
@@ -49,13 +49,13 @@ namespace NewsletterX.UnitTest
             var service = new SubscriptionService(emailService, subscriptionRepo);
 
             // act
-            var subscription = new Subscription("Terje", "terje@kolderup.net");
+            var subscription = new Subscription("Kasper", "kasper35@live.no");
             var subscribeIsSuccess = await service.Subscribe(subscription);
 
             // assert
             Assert.IsTrue(subscribeIsSuccess);
-            Assert.AreEqual("terje@kolderup.net", emailService.SentEmailToAddress);
-            Assert.AreEqual("terje@kolderup.net", subscriptionRepo.CreatedEmailToAddress);
+            Assert.AreEqual("kasper35@live.no", emailService.SentEmailToAddress);
+            Assert.AreEqual("kasper35@live.no", subscriptionRepo.CreatedEmailToAddress);
             Assert.AreEqual(1, emailService.CallCount);
             Assert.AreEqual(1, subscriptionRepo.CallCount);
         }
@@ -68,11 +68,11 @@ namespace NewsletterX.UnitTest
             subscriptionRepoMock.Setup(sr => sr.Create(It.IsAny<Subscription>()))
                 .ReturnsAsync(false);            
             var service = new SubscriptionService(emailServiceMock.Object, subscriptionRepoMock.Object);
-            var subscription = new Subscription("Terje", "terje@kolderup.net");
+            var subscription = new Subscription("Kasper", "kasper35@live.no");
             var isSuccess = await service.Subscribe(subscription);
             Assert.IsFalse(isSuccess);
             subscriptionRepoMock.Verify(sr => sr.Create(
-                It.Is<Subscription>(s => s.Email == "terje@kolderup.net")));
+                It.Is<Subscription>(s => s.Email == "kasper35@live.no")));
             emailServiceMock.VerifyNoOtherCalls();
             subscriptionRepoMock.VerifyNoOtherCalls();
         }
@@ -87,13 +87,13 @@ namespace NewsletterX.UnitTest
             subscriptionRepoMock.Setup(sr => sr.Create(It.IsAny<Subscription>()))
                 .ReturnsAsync(true);
             var service = new SubscriptionService(emailServiceMock.Object, subscriptionRepoMock.Object);
-            var subscription = new Subscription("Terje", "terje@kolderup.net");
+            var subscription = new Subscription("Kasper", "kasper35@live.no");
             var isSuccess = await service.Subscribe(subscription);
             Assert.IsFalse(isSuccess);
             emailServiceMock.Verify(es => es.Send(
-                It.Is<Email>(e => e.To == "terje@kolderup.net")));
+                It.Is<Email>(e => e.To == "kasper35@live.no")));
             subscriptionRepoMock.Verify(sr => sr.Create(
-                It.Is<Subscription>(s => s.Email == "terje@kolderup.net")));
+                It.Is<Subscription>(s => s.Email == "kasper35@live.no")));
             emailServiceMock.VerifyNoOtherCalls();
             subscriptionRepoMock.VerifyNoOtherCalls();
         }
@@ -103,7 +103,7 @@ namespace NewsletterX.UnitTest
         public async Task TestVerifyOk()
         {
             var code = "ed863c05-c1ef-4537-a7e0-63cddf9b5452";
-            var email = "terje@kolderup.net";
+            var email = "kasper35 @live.no";
             var verificationRequest = new Subscription(null, email, code);
             var subscriptionFromDb = new Subscription(null, null, code);
 
@@ -123,7 +123,7 @@ namespace NewsletterX.UnitTest
         {
             var code1 = "ed863c05-c1ef-4537-a7e0-63cddf9b5452";
             var code2 = "ed863c05-c1ef-4537-a7e0-63cddf9b5453";
-            var email = "terje@kolderup.net";
+            var email = "kasper35 @live.no";
             var verificationRequest = new Subscription(null, email, code1);
             var subscriptionFromDb = new Subscription(null, null, code2);
 
