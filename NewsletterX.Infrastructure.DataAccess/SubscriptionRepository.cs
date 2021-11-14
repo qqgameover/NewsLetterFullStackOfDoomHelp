@@ -20,17 +20,20 @@ namespace NewsletterX.Infrastructure.DataAccess
         public async Task<bool> Create(Subscription subscription)
         {
             await using var conn = new SqlConnection(_connectionString);
-            const string insert =
-                "INSERT INTO Subscr (Id, Email, VerificationCode, IsConfirmed) VALUES (@Id, @Email, @ConfCode, 0)";
-            var rowsAffected = await conn.ExecuteAsync(insert, new {Id = subscription.Id, Email = subscription.Email, ConfCode = subscription.VerificationCode});
+            const string insert = @"INSERT INTO Subscr (Id, 
+                                                        Email, 
+                                                        VerificationCode, 
+                                                        IsConfirmed) 
+                                    VALUES (@Id, @Email, @VerificationCode, 0)";
+            var rowsAffected = await conn.ExecuteAsync(insert, new {subscription.Id, subscription.Email, subscription.VerificationCode});
             return rowsAffected == 1;
         }
 
         public async Task<Subscription> ReadByEmail(string email)
         {
             await using var conn = new SqlConnection(_connectionString);
-            const string lookUp =
-                "SELECT * FROM Subscr WHERE Email = @Email";
+            const string lookUp = @"SELECT * FROM Subscr
+                                    WHERE Email = @Email";
             var query = await conn.QueryAsync<Subscription>(lookUp, new {Email = email});
             return query.FirstOrDefault(x => x.Email == email);
         }
@@ -40,8 +43,8 @@ namespace NewsletterX.Infrastructure.DataAccess
             await using var conn = new SqlConnection(_connectionString);
             const string update = @"UPDATE Subscr 
                                     SET IsConfirmed = 1  
-                                    WHERE VerificationCode = @ConfCode";
-            var linesAffected = await conn.ExecuteAsync(update, new { ConfCode = subscription.VerificationCode });
+                                    WHERE VerificationCode = @VerificationCode";
+            var linesAffected = await conn.ExecuteAsync(update, new { subscription.VerificationCode });
             return linesAffected == 1;
         }
     }

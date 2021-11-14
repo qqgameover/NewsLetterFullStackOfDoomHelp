@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Moq;
 using NewsletterX.Core.Application.Service;
@@ -132,8 +133,8 @@ namespace NewsletterX.UnitTest
                 .ReturnsAsync(subscriptionFromDb);
 
             var service = new SubscriptionService(null, subscriptionRepoMock.Object);
-            var isSuccess = await service.Verify(verificationRequest);
-            Assert.IsFalse(isSuccess);
+            var isGood = service.Verify(verificationRequest);
+            Assert.Throws<ValidationException>(async delegate { service.Verify(verificationRequest);});
             subscriptionRepoMock.Verify(sr=>sr.ReadByEmail(email));
             subscriptionRepoMock.VerifyNoOtherCalls();
         }
