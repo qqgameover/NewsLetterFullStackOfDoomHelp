@@ -35,7 +35,7 @@ namespace NewsletterX.Core.Application.Service
             var subscription = await _subscriptionRepository.ReadByEmail(verificationRequest.Email);
             if (subscription == null || verificationRequest.VerificationCode != subscription.VerificationCode)
             {
-                throw new ValidationException("Koden er feil, eller eposten er ikke registret i databasen");
+                return false;
             }
             subscription.IsVerified = true;
             var hasUpdated = await _subscriptionRepository.Update(subscription);
